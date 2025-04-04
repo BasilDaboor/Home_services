@@ -39,7 +39,10 @@
 
             <!-- Navigation -->
             <nav class="mt-4">
+
                 <x-nav-link href="{{route('dashboard.home')}}" :active="request()->is('/dashboard')"
+
+
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                     <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -53,7 +56,8 @@
                 <div>
                     <!-- Users dropdown toggle -->
 
-                    <x-nav-link href="/" :active="request()->is('/')"
+                    <x-nav-link href="{{ route('dashboard.users.index') }}" :active="request()->is('/dashboard/users/index')"
+
                         class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                         <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -66,13 +70,16 @@
 
                 </div>
 
+
                 <x-nav-link href="{{route('dashboard.services.index')}}" :active="request()->is('dashboard/services')"
+
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                     <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
                         </path>
                     </svg>
+
                     Services
                 </x-nav-link>
 
@@ -81,6 +88,16 @@
 
 
                 <a href="{{route('dashboard.bookings.index')}}" :active="request()->is('dashboard/bookings')"
+
+                    Projects
+                </a>
+
+
+
+
+
+
+                <a href="#"
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                     <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

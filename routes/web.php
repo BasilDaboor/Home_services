@@ -4,7 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
+
 use App\Http\Controllers\ServicesController;
+
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,9 +24,9 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
 Route::prefix('dashboard')->name('dashboard.')->middleware(['auth', 'role:admin,super_admin'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('home');
+
 
     //service routes
     // Route::resource('/services', ServicesController::class)->name('index', 'services.index')->name('create', 'services.create')->name('edit', 'services.edit')->name('show', 'services.show')->name('destroy', 'services.destroy');
@@ -41,5 +46,16 @@ Route::prefix('dashboard')->name('dashboard.')->middleware(['auth', 'role:admin,
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
     Route::put('/bookings/{booking}', [BookingController::class, 'update'])->name('bookings.update');
     Route::delete('bookings/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
+    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{users}', [UserController::class, 'update'])->name('users.update');
+
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
 });
 require __DIR__ . '/auth.php';
