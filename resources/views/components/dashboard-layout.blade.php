@@ -39,7 +39,7 @@
 
             <!-- Navigation -->
             <nav class="mt-4">
-                <x-nav-link href="/" :active="request()->is('/')"
+                <x-nav-link href="{{ route('dashboard') }}" :active="request()->is('/dashboard')"
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                     <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -53,7 +53,7 @@
                 <div>
                     <!-- Users dropdown toggle -->
 
-                    <x-nav-link href="/" :active="request()->is('/')"
+                    <x-nav-link href="{{ route('dashboard.users.index') }}" :active="request()->is('/dashboard/users/index')"
                         class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                         <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -202,6 +202,7 @@
             <!-- Page Content -->
             <main class="py-6">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    {{ $header ?? '' }}
                     {{ $slot }}
                 </div>
             </main>
