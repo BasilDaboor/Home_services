@@ -102,4 +102,6 @@
         </div>
     </div>
 
-    </x-dashbard-layout>
+
+</x-dashboard-layout>
+
