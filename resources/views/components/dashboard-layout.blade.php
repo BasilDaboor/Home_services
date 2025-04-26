@@ -40,9 +40,7 @@
             <!-- Navigation -->
             <nav class="mt-4">
 
-                <x-nav-link href="{{route('dashboard.home')}}" :active="request()->is('/dashboard')"
-
-
+                <x-nav-link href="{{ route('dashboard.home') }}" :active="request()->is('/dashboard')"
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                     <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,7 +55,6 @@
                     <!-- Users dropdown toggle -->
 
                     <x-nav-link href="{{ route('dashboard.users.index') }}" :active="request()->is('/dashboard/users/index')"
-
                         class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                         <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -71,8 +68,7 @@
                 </div>
 
 
-                <x-nav-link href="{{route('dashboard.services.index')}}" :active="request()->is('dashboard/services')"
-
+                <x-nav-link href="{{ route('dashboard.services.index') }}" :active="request()->is('dashboard/services')"
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                     <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -84,20 +80,7 @@
                 </x-nav-link>
 
 
-
-
-
-                <a href="{{route('dashboard.bookings.index')}}" :active="request()->is('dashboard/bookings')"
-
-                    Projects
-                </a>
-
-
-
-
-
-
-                <a href="#"
+                <a href="{{ route('dashboard.bookings.index') }}"
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                     <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
