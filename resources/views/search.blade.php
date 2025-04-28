@@ -1,3 +1,4 @@
+{{--
 <!-- resources/views/search.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
@@ -204,4 +205,4 @@
     </footer>
 </body>
 
-</html>
+</html> --}}

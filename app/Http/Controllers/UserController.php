@@ -62,6 +62,7 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'role' => ['required', Rule::in(['customer', 'provider', 'admin', 'super_admin'])],
         ]);
 
@@ -111,6 +112,7 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'role' => ['required', Rule::in(['customer', 'provider', 'admin', 'super_admin'])],
         ]);
 

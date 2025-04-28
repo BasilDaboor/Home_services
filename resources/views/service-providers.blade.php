@@ -1,3 +1,5 @@
+{{--
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -6,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $service->name }} Providers - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -21,7 +23,6 @@
 
         .search-input {
             width: 100%;
-            max-width: 500px;
             border: 1px solid #E5E7EB;
             border-radius: 9999px;
             padding: 0.75rem 1rem;
@@ -41,26 +42,10 @@
             align-items: center;
             justify-content: center;
         }
-
-        .category-card {}
-
-        .category-card:hover {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .category-icon {
-            width: 30px;
-            height: 30px;
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.5rem;
-        }
     </style>
 </head>
 
-<body class="antialiased">
+<body class="antialiased bg-gray-50">
     <!-- Header/Navigation -->
     <header class="bg-white py-4 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -86,9 +71,9 @@
 
                 <!-- Navigation -->
                 <nav class="hidden md:flex space-x-10">
-                    <a href="{{ route('home') }}" class="text-base font-medium text-gray-900">Home</a>
-                    <a href="{{ route('services.index') }}"
-                        class="text-base font-medium text-gray-500 hover:text-gray-900">Services</a>
+                    <a href="{{ route('home') }}"
+                        class="text-base font-medium text-gray-500 hover:text-gray-900">Home</a>
+                    <a href="#" class="text-base font-medium text-gray-500 hover:text-gray-900">Services</a>
                     <a href="#" class="text-base font-medium text-gray-500 hover:text-gray-900">About Us</a>
                 </nav>
 
@@ -97,8 +82,6 @@
                     @auth
                         <div class="ml-3 relative">
                             <div>
-
-
                                 @if (auth()->user()->image)
                                     <img class="h-10 w-10 rounded-full object-cover"
                                         src="{{ asset('storage/' . auth()->user()->image) }}" alt="Profile">
@@ -110,12 +93,6 @@
                                     </div>
                                 @endif
                             </div>
-
-
-
-
-
-
                         </div>
                     @else
                         <div class="hidden md:flex items-center space-x-4">
@@ -132,20 +109,18 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <div class="bg-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-                <span class="block">Find Home</span>
-                <span class="block text-indigo-600">Service/Repair</span>
-                <span class="block">Near You</span>
-            </h1>
-            <p class="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-                Explore Best Home Service & Repair near you
-            </p>
+    <!-- Service Providers Section -->
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">
+                    {{ $service->name }} Providers
+                </h1>
+                <p class="mt-2 text-sm text-gray-600">{{ $providers->total() }} providers available</p>
+            </div>
 
             <!-- Search Form -->
-            <div class="mt-10 max-w-xl mx-auto relative">
+            <div class="mb-8 max-w-xl relative">
                 <form action="{{ route('search') }}" method="GET">
                     <input type="text" name="query" placeholder="Search" class="search-input" required>
                     <button type="submit" class="search-button">
@@ -158,107 +133,43 @@
                 </form>
             </div>
 
+            <!-- Service Description -->
+            @if ($service->description)
+                <div class="mb-8 bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">About {{ $service->name }}</h2>
+                    <p class="text-gray-700">{{ $service->description }}</p>
+                </div>
+            @endif
 
-            <!-- Service Categories -->
-            <div id="services" class="mt-16 grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-6 px-16"
-                style="padding: 0 200px ;">
-                @foreach ($services as $service)
-                    <a href="{{ route('services.category', $service->name) }}" style="all: unset !important">
-                        <div style="width: 80%"
-                            class="flex flex-col items-center
-             justify-center
-             bg-purple-50 p-5 rounded-lg
-             cursor-pointer hover:scale-110 transition-all ease-in-out
-             ml-4">
-                            @switch(strtolower($service->name))
-                                @case('cleaning')
-                                    <img src="{{ asset('images/' . $service->name . '.png') }}" alt="Default Profile"
-                                        class="h-10 w-10 rounded-full object-cover">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-indigo-400">{{ $service->name }}</span>
-                                @break
-
-                                @case('repair')
-                                    <img src="{{ asset('images/' . $service->name) . '.png' }}" alt="Default Profile"
-                                        class="h-10 w-10 rounded-full object-cover">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-indigo-400">{{ $service->name }}</span>
-                                @break
-
-                                @case('painting')
-                                    <img src="{{ asset('images/' . $service->name) . '.png' }}" alt="Default Profile"
-                                        class="h-10 w-10 rounded-full object-cover">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-indigo-400">{{ $service->name }}</span>
-                                @break
-
-                                @case('shifting')
-                                    <img src="{{ asset('images/' . $service->name) . '.png' }}" alt="Default Profile"
-                                        class="h-10 w-10 rounded-full object-cover">
-                                    <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-indigo-400">{{ $service->name }}</span>
-                                @break
-
-                                @case('plumbing')
-                                    <img src="{{ asset('images/' . $service->name) . '.png' }}" alt="Default Profile"
-                                        class="h-10 w-10 rounded-full object-cover">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-indigo-400">{{ $service->name }}</span>
-                                @break
-
-                                @case('electric')
-                                    <img src="{{ asset('images/' . $service->name) . '.png' }}" alt="Default Profile"
-                                        class="h-10 w-10 rounded-full object-cover">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-indigo-400">{{ $service->name }}</span>
-                                @break
-
-                                @default
-                                    <img src="{{ asset('images/' . $service->name) . '.png' }}" alt="Default Profile"
-                                        class="h-10 w-10 rounded-full object-cover">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                    </svg>
-                                    <span class="text-sm font-medium text-indigo-400">{{ $service->name }}</span>
-                            @endswitch
-                        </div>
-                    </a>
-                @endforeach
-            </div>
-        </div>
-    </div>
-
-    <!-- Popular Business Section -->
-    <div class="py-12 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-8">Popular Business</h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach ($popularProviders as $provider)
+            <!-- Results Grid -->
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                @forelse($providers as $provider)
                     <x-provider-card :provider="$provider" />
-                @endforeach
+                @empty
+                    <div class="col-span-full py-12">
+                        <div class="text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <h3 class="mt-2 text-lg font-medium text-gray-900">No providers available</h3>
+                            <p class="mt-1 text-sm text-gray-500">We couldn't find any providers for
+                                {{ $service->name }} service at the moment.</p>
+                            <div class="mt-6">
+                                <a href="{{ route('home') }}"
+                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                                    Back to Home
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforelse
             </div>
 
-            <div class="mt-8 text-center">
-                <a href="{{ route('services.index') }}"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
-                    View All Services
-                </a>
+            <!-- Pagination -->
+            <div class="mt-12">
+                {{ $providers->links() }}
             </div>
         </div>
     </div>
@@ -294,10 +205,8 @@
                 <div>
                     <h3 class="text-sm font-semibold text-gray-600 tracking-wider uppercase">Quick Links</h3>
                     <ul class="mt-4 space-y-4">
-                        <li><a href="{{ route('home') }}"
-                                class="text-base text-gray-500 hover:text-gray-900">Home</a></li>
-                        <li><a href="{{ route('services.index') }}"
-                                class="text-base text-gray-500 hover:text-gray-900">Services</a></li>
+                        <li><a href="#" class="text-base text-gray-500 hover:text-gray-900">Home</a></li>
+                        <li><a href="#" class="text-base text-gray-500 hover:text-gray-900">Services</a></li>
                         <li><a href="#" class="text-base text-gray-500 hover:text-gray-900">About Us</a></li>
                         <li><a href="#" class="text-base text-gray-500 hover:text-gray-900">Contact</a></li>
                     </ul>
@@ -344,22 +253,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- JavaScript for dropdown menu -->
-    <script>
-        // Add your JavaScript here for any interactive elements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const mobileMenuButton = document.querySelector('#mobile-menu-button');
-            const mobileMenu = document.querySelector('#mobile-menu');
-
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-        });
-    </script>
 </body>
 
-</html>
+</html> --}}

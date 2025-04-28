@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        $services = Service::factory(10)->create();
+        $services = Service::factory(6)->create();
 
         $customers = User::factory(20)->customer()->create();
 

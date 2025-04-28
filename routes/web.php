@@ -3,32 +3,42 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\ProviderController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServicesController;
-
+use App\Http\Controllers\ServicesPageController;
 use App\Http\Controllers\UserController;
 
 
-// Route::get('/', function () {
-//     return view('welcome');
-// })->name('dashboard');
-
-// Route::get('/', [HomeController::class, 'index'])->name('home');
-// Route::get('/search', [HomeController::class, 'search'])->name('search');
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// Search route
 Route::get('/search', [HomeController::class, 'search'])->name('search');
+Route::get('/services/{service}', [HomeController::class, 'serviceProviders'])->name('service.providers');
+Route::get('/providers/{provider}', [HomeController::class, 'providerDetails'])->name('provider.details');
 
-// Booking routes (add more details as needed)
-Route::get('/bookings/create/{provider}', function () {
-    // This is a placeholder - implement the actual booking controller
-    return "Booking form goes here";
-})->name('bookings.create');
+Route::get('/services', [ServicesPageController::class, 'index'])->name('services.index');
+Route::get('/services/category/{category}', [ServicesPageController::class, 'category'])->name('services.category');
 
+Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
+    // Customer routes
+    Route::middleware('role:customer')->group(function () {
+        Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('dashboard');
+        Route::get('/bookings', [CustomerController::class, 'bookings'])->name('bookings');
+        Route::post('/bookings', [BookingController::class, 'customerStore'])->name('bookings.store');
+        Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    });
+
+    // Provider routes
+    Route::middleware('role:provider')->group(function () {
+        Route::get('/provider/dashboard', [ProviderController::class, 'dashboard'])->name('provider.dashboard');
+        Route::get('/provider/bookings', [ProviderController::class, 'bookings'])->name('provider.bookings');
+        Route::patch('/provider/bookings/{booking}/status', [ProviderController::class, 'updateBookingStatus'])->name('provider.bookings.status');
+        Route::get('/provider/profile', [ProviderController::class, 'editProfile'])->name('provider.profile.edit');
+        Route::put('/provider/profile', [ProviderController::class, 'updateProfile'])->name('provider.profile.update');
+    });
+});
 
 
 

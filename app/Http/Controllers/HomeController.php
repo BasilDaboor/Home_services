@@ -3,72 +3,88 @@
 namespace App\Http\Controllers;
 
 use App\Models\Provider;
+use App\Models\Review;
 use App\Models\Service;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     /**
-     * Display the home page with services and providers
+     * Show the application landing page.
+     *
+     * @return \Illuminate\View\View
      */
     public function index()
     {
-        // Get all services for the service category section
+        // Get all services for category display
         $services = Service::all();
 
-        // Get top-rated providers for the popular business section
-        $providers = Provider::with(['user', 'service'])
+        // Get popular providers with their users and services
+        $popularProviders = Provider::with(['user', 'service'])
             ->orderBy('rating', 'desc')
             ->take(8)
             ->get();
 
-        return view('home', compact('services', 'providers'));
+        return view('home', compact('services', 'popularProviders'));
     }
 
     /**
-     * Search for providers based on query and/or service id
+     * Search for providers based on service or location
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
      */
     public function search(Request $request)
     {
         $query = $request->input('query');
-        $serviceId = $request->input('service_id');
 
-        // Get all services for the service category section
-        $services = Service::all();
+        // Search providers by service name or description
+        $providers = Provider::with(['user', 'service'])
+            ->whereHas('service', function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('description', 'like', "%{$query}%");
+            })
+            ->orWhereHas('user', function ($q) use ($query) {
+                $q->where('address', 'like', "%{$query}%");
+            })
+            ->orderBy('rating', 'desc')
+            ->paginate(12);
 
-        // Start the query builder for providers
-        $providersQuery = Provider::with(['user', 'service']);
+        return view('search-results', compact('providers', 'query'));
+    }
 
-        // Filter by service if specified
-        if ($serviceId) {
-            $providersQuery->where('service_id', $serviceId);
-        }
+    /**
+     * Display providers by service
+     *
+     * @param  \App\Models\Service  $service
+     * @return \Illuminate\View\View
+     */
+    public function serviceProviders(Service $service)
+    {
+        $providers = Provider::where('service_id', $service->id)
+            ->with('user')
+            ->orderBy('rating', 'desc')
+            ->paginate(12);
 
-        // Filter by search query if provided
-        if ($query) {
-            $providersQuery->where(function ($q) use ($query) {
-                $q->where('business_name', 'like', "%{$query}%")
-                    ->orWhere('description', 'like', "%{$query}%")
-                    // Search in related user information
-                    ->orWhereHas('user', function ($userQuery) use ($query) {
-                        $userQuery->where('first_name', 'like', "%{$query}%")
-                            ->orWhere('last_name', 'like', "%{$query}%")
-                            ->orWhere('address', 'like', "%{$query}%");
-                    });
-            });
-        }
+        return view('service-providers', compact('service', 'providers'));
+    }
 
-        // Get the providers
-        $providers = $providersQuery->orderBy('rating', 'desc')->paginate(12);
+    /**
+     * Display provider details
+     *
+     * @param  \App\Models\Provider  $provider
+     * @return \Illuminate\View\View
+     */
+    public function providerDetails(Provider $provider)
+    {
+        $provider->load(['user', 'service']);
 
-        // If it's an AJAX request, return JSON
-        if ($request->ajax()) {
-            return response()->json([
-                'providers' => $providers
-            ]);
-        }
+        // Get provider reviews
+        $reviews = Review::where('provider_id', $provider->id)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
 
-        // Otherwise return the search view
-        return view('search', compact('services', 'providers', 'query', 'serviceId'));
+        return view('provider-details', compact('provider', 'reviews'));
     }
 }
