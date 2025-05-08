@@ -1,4 +1,3 @@
-{{--
 <!-- resources/views/search.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
@@ -147,62 +146,7 @@
     </section>
 
     <!-- Footer (same as home page) -->
-    <footer class="bg-gray-800 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">About Us</h3>
-                    <p class="text-gray-400">We connect you with trusted service providers in your area for all your
-                        home service needs.</p>
-                </div>
-
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Services</h3>
-                    <ul class="space-y-2 text-gray-400">
-                        @foreach ($services->take(6) as $service)
-                            <li><a href="{{ route('search', ['service_id' => $service->id]) }}"
-                                    class="hover:text-white">{{ $service->name }}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Contact</h3>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><i class="fas fa-map-marker-alt mr-2"></i> 123 Service Ave, NYC</li>
-                        <li><i class="fas fa-phone mr-2"></i> +1 (555) 123-4567</li>
-                        <li><i class="fas fa-envelope mr-2"></i> info@homeservice.com</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Follow Us</h3>
-                    <div class="flex space-x-4">
-                        <a href="#"
-                            class="bg-gray-700 w-10 h-10 rounded-full flex items-center justify-center hover:bg-purple-600 transition">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#"
-                            class="bg-gray-700 w-10 h-10 rounded-full flex items-center justify-center hover:bg-purple-600 transition">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#"
-                            class="bg-gray-700 w-10 h-10 rounded-full flex items-center justify-center hover:bg-purple-600 transition">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="#"
-                            class="bg-gray-700 w-10 h-10 rounded-full flex items-center justify-center hover:bg-purple-600 transition">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} Home Service Marketplace. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <x-footer />
 </body>
 
-</html> --}}
+</html>

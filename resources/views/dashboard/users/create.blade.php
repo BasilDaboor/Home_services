@@ -10,7 +10,7 @@
             </div>
 
             <div class="mt-6 bg-white rounded-lg shadow-sm p-6">
-                <form action="{{ route('dashboard.users.store') }}" method="POST">
+                <form action="{{ route('dashboard.users.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     @include('dashboard.users.form-fields')

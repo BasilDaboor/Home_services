@@ -17,7 +17,6 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-
     protected $fillable = [
         'first_name',
         'last_name',
@@ -51,12 +50,25 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
     public function provider()
     {
         return $this->hasOne(Provider::class);
     }
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+
+
+
+
+
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

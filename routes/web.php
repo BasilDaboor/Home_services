@@ -3,51 +3,53 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProviderController;
-use App\Http\Controllers\ReviewController;
+
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\ServicesPageController;
 use App\Http\Controllers\UserController;
 
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Route::get('/', function () {
+//     return view('welcome');
+// })->name('dashboard');
+
+// Route::get('/', [HomeController::class, 'index'])->name('home');
+// Route::get('/search', [HomeController::class, 'search'])->name('search');
+
+
+// Search route
 Route::get('/search', [HomeController::class, 'search'])->name('search');
+
+
 Route::get('/services/{service}', [HomeController::class, 'serviceProviders'])->name('service.providers');
 Route::get('/providers/{provider}', [HomeController::class, 'providerDetails'])->name('provider.details');
-
 Route::get('/services', [ServicesPageController::class, 'index'])->name('services.index');
 Route::get('/services/category/{category}', [ServicesPageController::class, 'category'])->name('services.category');
 
-Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
-    // Customer routes
-    Route::middleware('role:customer')->group(function () {
-        Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('dashboard');
-        Route::get('/bookings', [CustomerController::class, 'bookings'])->name('bookings');
-        Route::post('/bookings', [BookingController::class, 'customerStore'])->name('bookings.store');
-        Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-    });
 
-    // Provider routes
-    Route::middleware('role:provider')->group(function () {
-        Route::get('/provider/dashboard', [ProviderController::class, 'dashboard'])->name('provider.dashboard');
-        Route::get('/provider/bookings', [ProviderController::class, 'bookings'])->name('provider.bookings');
-        Route::patch('/provider/bookings/{booking}/status', [ProviderController::class, 'updateBookingStatus'])->name('provider.bookings.status');
-        Route::get('/provider/profile', [ProviderController::class, 'editProfile'])->name('provider.profile.edit');
-        Route::put('/provider/profile', [ProviderController::class, 'updateProfile'])->name('provider.profile.update');
-    });
-});
-
-
-
-
+// Profile routes
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Booking status update route (needed for provider profile)
+    Route::patch('/bookings/{booking}/status', [BookingController::class, 'updateStatus'])->name('bookings.update-status');
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+
+    Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
 });
+
+
+// Route::middleware('auth')->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// });
 
 
 Route::prefix('dashboard')->name('dashboard.')->middleware(['auth', 'role:admin,super_admin'])->group(function () {
@@ -80,7 +82,7 @@ Route::prefix('dashboard')->name('dashboard.')->middleware(['auth', 'role:admin,
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
     Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{users}', [UserController::class, 'update'])->name('users.update');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 require __DIR__ . '/auth.php';

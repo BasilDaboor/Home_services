@@ -3,7 +3,7 @@
     <!-- Provider Image -->
     <div class="h-48 bg-gray-200">
         @if ($provider->user->image)
-            <img src="{{ $provider->user->image }}" alt="{{ $provider->user->first_name }}"
+            <img src="{{ asset('storage/' . $provider->user->image) }}" alt="{{ $provider->user->first_name }}"
                 class="w-full h-full object-cover">
         @else
             <div class="w-full h-full bg-gray-200 flex items-center justify-center">

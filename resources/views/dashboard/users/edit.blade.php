@@ -2,9 +2,7 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-semibold text-gray-900">Edit User: {{ $user->first_name }}
-                    {{ $user->last_name }}
-                </h1>
+                <h1 class="text-2xl font-semibold text-gray-900">Edit User</h1>
                 <a href="{{ route('dashboard.users.index') }}"
                     class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                     Back to Users
@@ -12,7 +10,9 @@
             </div>
 
             <div class="mt-6 bg-white rounded-lg shadow-sm p-6">
-                <form action="{{ route('dashboard.users.update', $user) }}" method="POST">
+
+                <form action="{{ route('dashboard.users.update', $user->id) }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 

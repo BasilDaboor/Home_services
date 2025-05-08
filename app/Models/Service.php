@@ -9,16 +9,18 @@ class Service extends Model
 {
     /** @use HasFactory<\Database\Factories\ServiceFactory> */
     use HasFactory;
+
     protected $fillable = [
         'name',
         'description',
-        'price',
-        'duration'
+        'image'
     ];
-    public function provider()
+
+    public function providers()
     {
         return $this->hasMany(Provider::class);
     }
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);

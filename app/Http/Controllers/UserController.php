@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Provider;
+use App\Models\Service;
 use Illuminate\Http\Request;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    //
     public function index(Request $request)
     {
         $query = User::query();
@@ -44,7 +45,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('dashboard.users.create');
+        $services = Service::all();
+        return view('dashboard.users.create', compact('services'));
     }
 
     /**
@@ -55,23 +57,67 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'role' => ['required', Rule::in(['customer', 'provider', 'admin', 'super_admin'])],
-        ]);
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ];
 
-        $validated['password'] = Hash::make($validated['password']);
+        // Add provider-specific rules only if role is provider
+        if ($request->role === 'provider') {
+            $rules['service_id'] = 'required|exists:services,id';
+            $rules['description'] = 'nullable|string';
+        }
 
-        User::create($validated);
+        $validated = $request->validate($rules);
 
-        return redirect()->route('dashboard.users.index')
-            ->with('success', 'User created successfully.');
+        DB::beginTransaction();
+        try {
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('user-images', 'public');
+                $validated['image'] = $imagePath;
+            }
+
+            $validated['password'] = Hash::make($validated['password']);
+
+            // Create the user
+            $user = User::create([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+                'password' => $validated['password'],
+                'phone' => $validated['phone'] ?? null,
+                'address' => $validated['address'] ?? null,
+                'role' => $validated['role'],
+                'image' => $validated['image'] ?? null,
+            ]);
+
+            // If role is provider, create provider record
+            if ($validated['role'] === 'provider') {
+                Provider::create([
+                    'user_id' => $user->id,
+                    'service_id' => $validated['service_id'],
+                    'description' => $validated['description'] ?? null,
+                    'rating' => 0,
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('dashboard.users.index')
+                ->with('success', 'User created successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error creating user: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -82,6 +128,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        if ($user->role === 'provider') {
+            $user->load('provider.service');
+        }
         return view('dashboard.users.show', compact('user'));
     }
 
@@ -93,7 +142,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('dashboard.users.edit', compact('user'));
+        $services = Service::all();
+        return view('dashboard.users.edit', compact('user', 'services'));
     }
 
     /**
@@ -105,28 +155,81 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $validated = $request->validate([
+        $rules = [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8|confirmed',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'role' => ['required', Rule::in(['customer', 'provider', 'admin', 'super_admin'])],
-        ]);
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ];
 
-        // Only update password if provided
-        if (!empty($validated['password'])) {
-            $validated['password'] = Hash::make($validated['password']);
-        } else {
-            unset($validated['password']);
+        // Add provider-specific rules only if role is provider
+        if ($request->role === 'provider') {
+            $rules['service_id'] = 'required|exists:services,id';
+            $rules['description'] = 'nullable|string';
         }
 
-        $user->update($validated);
+        $validated = $request->validate($rules);
+        DB::beginTransaction();
+        try {
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                // if ($user->image) {
+                //     \Storage::disk('public')->delete($user->image);
+                // }
+                $imagePath = $request->file('image')->store('user-images', 'public');
+                $validated['image'] = $imagePath;
+            }
 
-        return redirect()->route('dashboard.users.index')
-            ->with('success', 'User updated successfully.');
+            // Only update password if provided
+            if (!empty($validated['password'])) {
+                $validated['password'] = Hash::make($validated['password']);
+            } else {
+                unset($validated['password']);
+            }
+
+            // Update user data
+            $user->update([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+                'phone' => $validated['phone'] ?? null,
+                'address' => $validated['address'] ?? null,
+                'role' => $validated['role'],
+                'image' => $validated['image'] ?? $user->image,
+            ] + (isset($validated['password']) ? ['password' => $validated['password']] : []));
+
+            // Handle provider relationship
+            if ($validated['role'] === 'provider') {
+                // Create or update provider record
+                $user->provider()->updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'service_id' => $validated['service_id'],
+                        'description' => $validated['description'] ?? null,
+                    ]
+                );
+            } else {
+                // If role changed from provider to something else, delete provider record
+                if ($user->provider) {
+                    $user->provider->delete();
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('dashboard.users.index')
+                ->with('success', 'User updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Error updating user: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -142,6 +245,13 @@ class UserController extends Controller
             return redirect()->route('dashboard.users.index')
                 ->with('error', 'You cannot delete your own account.');
         }
+        if ($user->provider) {
+            $user->provider->delete();
+        }
+        // Delete user image if exists
+        // if ($user->image) {
+        //     \Storage::disk('public')->delete($user->image);
+        // }
 
         $user->delete();
 

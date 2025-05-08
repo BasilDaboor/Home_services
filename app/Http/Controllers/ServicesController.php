@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServicesController extends Controller
 {
@@ -40,8 +41,14 @@ class ServicesController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('service-images', 'public');
+            $validated['image'] = $imagePath;
+        }
 
         Service::create($validated);
 
@@ -83,8 +90,19 @@ class ServicesController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($service->image) {
+                Storage::disk('public')->delete($service->image);
+            }
+
+            $imagePath = $request->file('image')->store('service-images', 'public');
+            $validated['image'] = $imagePath;
+        }
 
         $service->update($validated);
 
@@ -101,9 +119,14 @@ class ServicesController extends Controller
     public function destroy(Service $service)
     {
         // Check if service is being used by providers or bookings
-        if ($service->provider()->count() > 0 || $service->bookings()->count() > 0) {
+        if ($service->providers()->count() > 0 || $service->bookings()->count() > 0) {
             return redirect()->route('dashboard.services.index')
                 ->with('error', 'Cannot delete service as it is associated with providers or bookings.');
+        }
+
+        // Delete image if exists
+        if ($service->image) {
+            Storage::disk('public')->delete($service->image);
         }
 
         $service->delete();

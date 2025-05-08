@@ -27,7 +27,7 @@ class ServiceFactory extends Factory
                 'Cleaning',
             ]),
             'description' => $this->faker->text(),
-            'price' => $this->faker->randomFloat(2, 0, 1000),
+
         ];
     }
 }
