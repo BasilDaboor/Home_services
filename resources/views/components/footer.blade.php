@@ -4,19 +4,12 @@
             <!-- Logo and Description -->
             <div class="col-span-1 md:col-span-2">
                 <div class="flex items-center">
-                    <svg class="w-10 h-10 text-indigo-600" viewBox="0 0 40 40" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M20 5C11.716 5 5 11.716 5 20C5 28.284 11.716 35 20 35C28.284 35 35 28.284 35 20C35 11.716 28.284 5 20 5Z"
-                            fill="#8B5CF6" />
-                        <path
-                            d="M15 15C17.761 15 20 17.239 20 20C20 22.761 17.761 25 15 25C12.239 25 10 22.761 10 20C10 17.239 12.239 15 15 15Z"
-                            fill="white" />
-                        <path
-                            d="M25 10C27.761 10 30 12.239 30 15C30 17.761 27.761 20 25 20C22.239 20 20 17.761 20 15C20 12.239 22.239 10 25 10Z"
-                            fill="white" />
-                    </svg>
-                    <span class="ml-3 text-xl font-bold text-indigo-600">Logoipsum</span>
+                    <a href="{{ route('home') }}" class="flex items-center">
+                        <img class="h-12 w-12 " src="{{ asset('images/home_logo.jpg') }}" alt="logo">
+
+                        <span class="ml-3 text-xl font-bold text-indigo-600">Trusty <span
+                                class="text-purple-500">Hands</span></span>
+                    </a>
                 </div>
                 <p class="mt-4 text-gray-500 text-sm">
                     We provide high-quality home services in your area. Our team of professionals is dedicated to
@@ -31,8 +24,10 @@
                     <li><a href="{{ route('home') }}" class="text-base text-gray-500 hover:text-gray-900">Home</a></li>
                     <li><a href="{{ route('services.index') }}"
                             class="text-base text-gray-500 hover:text-gray-900">Services</a></li>
-                    <li><a href="#" class="text-base text-gray-500 hover:text-gray-900">About Us</a></li>
-                    <li><a href="#" class="text-base text-gray-500 hover:text-gray-900">Contact</a></li>
+                    <li><a href="{{ route('aboutUs') }}" class="text-base text-gray-500 hover:text-gray-900">About
+                            Us</a></li>
+                    <li><a href="{{ route('contact.index') }}"
+                            class="text-base text-gray-500 hover:text-gray-900">Contact</a></li>
                 </ul>
             </div>
 
@@ -46,7 +41,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                         </svg>
-                        <span class="text-gray-500">+1 (555) 123-4567</span>
+                        <span class="text-gray-500">+(962) 781 538 135</span>
                     </li>
                     <li class="flex">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 mr-2" fill="none"
@@ -54,7 +49,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        <span class="text-gray-500">info@homeservices.com</span>
+                        <span class="text-gray-500">Trustyhands@gmail.com</span>
                     </li>
                     <li class="flex">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 mr-2" fill="none"
@@ -64,7 +59,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <span class="text-gray-500">123 Main St, Anytown, USA</span>
+                        <span class="text-gray-500">Al-Dakhliya Cir,Amman,Jordan</span>
                     </li>
                 </ul>
             </div>

@@ -227,7 +227,7 @@
 
                 <!-- Sidebar Booking Form -->
                 <div class="w-full lg:w-1/4">
-                    <div class="bg-white p-6 rounded-lg shadow-sm sticky top-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm sticky top-6" style="z-index: -1">
                         @auth
                             @if (auth()->user()->role === 'customer')
                                 <form action="{{ route('bookings.store') }}" method="POST">

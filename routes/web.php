@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 
@@ -11,6 +13,12 @@ use App\Http\Controllers\ServicesPageController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/aboutUs', [AboutUsController::class, 'index'])->name('aboutUs');
+Route::get('/contactUs', [AboutUsController::class, 'index'])->name('contactUs');
+
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 // Route::get('/', function () {
 //     return view('welcome');
