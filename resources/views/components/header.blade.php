@@ -2,6 +2,7 @@
 <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 <script src="//unpkg.com/alpinejs" defer></script>
+<title>Trusty Hands</title>
 <style>
     ::-webkit-scrollbar {
         width: 8px;

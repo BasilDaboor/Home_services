@@ -20,7 +20,7 @@
 
         <div class="login-form">
             <div class="login-form-header">
-                <h2>Grow</h2>
+                <h2>Trusty Hands</h2>
                 <h3>Welcome Back!</h3>
                 <p>Sign in to continue your charitable journey</p>
             </div>

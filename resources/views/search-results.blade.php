@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Search Results - {{ config('app.name', 'Laravel') }}</title>
+    <title>Search Results - Trusty Hands</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -75,7 +75,7 @@
             </div>
 
             <!-- Results Grid -->
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
                 @forelse($providers as $provider)
                     <x-provider-card :provider="$provider" />
                 @empty

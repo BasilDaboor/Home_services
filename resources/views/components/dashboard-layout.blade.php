@@ -90,7 +90,7 @@
                     Bookings
                 </a>
 
-                <a href="#"
+                {{-- <a href="#"
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">
                     <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -98,7 +98,7 @@
                         </path>
                     </svg>
                     Documents
-                </a>
+                </a> --}}
 
                 <a href="#"
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-800 flex items-center">

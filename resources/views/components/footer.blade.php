@@ -67,7 +67,7 @@
 
         <div class="mt-12 border-t border-gray-200 pt-8">
             <p class="text-base text-gray-400 text-center">
-                &copy; {{ date('Y') }} Home Services. All rights reserved.
+                &copy; {{ date('Y') }} Trusty Hands. All rights reserved.
             </p>
         </div>
     </div>

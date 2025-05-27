@@ -1,4 +1,107 @@
 <x-dashboard-layout>
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 bg-white border-b border-gray-200">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Dashboard</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Total Providers -->
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-500 bg-opacity-10">
+                            <svg class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">Total Providers</h3>
+                            <p class="text-3xl font-semibold text-gray-700">{{ $totalProviders }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Customers -->
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-500 bg-opacity-10">
+                            <svg class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">Total Customers</h3>
+                            <p class="text-3xl font-semibold text-gray-700">{{ $totalCustomers }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Bookings -->
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-500 bg-opacity-10">
+                            <svg class="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-medium text-gray-900">Total Bookings</h3>
+                            <p class="text-3xl font-semibold text-gray-700">{{ $totalBookings }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Bookings -->
+            <div class="mt-8">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Bookings</h3>
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <ul class="divide-y divide-gray-200">
+                        @forelse($recentBookings as $booking)
+                            <li class="px-6 py-4">
+                                <a href="{{ route('dashboard.bookings.show', $booking->id) }}"
+                                    class="block hover:bg-gray-50 rounded-md">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0">
+                                            <span
+                                                class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="ml-4">
+                                            <p class="text-sm font-medium text-gray-900">
+                                                {{ $booking->user->first_name }} {{ $booking->user->last_name }} booked
+                                                {{ $booking->provider?->user->first_name ?? 'N/A' }}
+                                                {{ $booking->provider?->user->last_name ?? '' }}
+                                            </p>
+                                            <p class="text-sm text-gray-500">
+                                                {{ $booking->booking_date->diffForHumans() }} |
+                                                Status: {{ ucfirst($booking->status) }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        @empty
+                            <li class="px-6 py-4 text-gray-500">No recent bookings</li>
+                        @endforelse
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</x-dashboard-layout>
+
+{{-- <x-dashboard-layout>
 
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 bg-white border-b border-gray-200">
@@ -103,5 +206,4 @@
     </div>
 
 
-</x-dashboard-layout>
-
+</x-dashboard-layout> --}}

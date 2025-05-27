@@ -29,7 +29,7 @@
                                 placeholder="Search by name or email">
                         </div>
                     </div>
-
+                    <input type="number" name="number">
                     <div class="w-full md:w-64">
                         <label for="role" class="sr-only">Filter by Role</label>
                         <select name="role" id="role"
@@ -74,6 +74,9 @@
                     <span class="block sm:inline">{{ session('error') }}</span>
                 </div>
             @endif
+
+
+
 
             <!-- Users Table -->
             <div class="mt-4 flex flex-col ">

@@ -19,7 +19,7 @@
         </div>
         <div class="register-form">
             <div class="register-form-header">
-                <h2>Grow</h2>
+                <h2>Trusty Hands</h2>
                 <h3>Create Your Account</h3>
                 <p>Join our community and start making an impact</p>
             </div>

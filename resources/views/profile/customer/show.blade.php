@@ -63,7 +63,6 @@
                 <div>
                     <div class="flex justify-between items-center mb-3">
                         <h3 class="text-lg font-medium text-gray-900">Recent Bookings</h3>
-                        <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800">View all</a>
                     </div>
 
                     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
